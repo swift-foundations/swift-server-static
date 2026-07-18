@@ -31,4 +31,3 @@ jobs:
 
       - name: Test (release)
         run: swift test -c release
-
