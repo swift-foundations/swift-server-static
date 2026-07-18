@@ -62,10 +62,16 @@ extension Server.Static.Policy.Test.Integration {
     @Test
     func `resolves static assets by configured prefix`() {
         let policy = Server.Static.Policy(
-            profile: .init(archive: .init(assetPrefix: "static"))
+            profile: .init(
+                archive: .init(
+                    documentationJSON: "metadata/documentation.json",
+                    assetPrefix: "static"
+                )
+            )
         )
 
         #expect(policy.resolve(.init(path: "/static/site.css")) == .resource(.init(path: "static/site.css", kind: .asset)))
-        #expect(policy.resolve(.init(path: "/documentation.json")) == .resource(.init(path: "data/documentation.json", kind: .documentationJSON)))
+        #expect(policy.resolve(.init(path: "/documentation.json")) == .resource(.init(path: "metadata/documentation.json", kind: .documentationJSON)))
+        #expect(policy.resolve(.init(path: "/metadata/documentation.json")) == .resource(.init(path: "metadata/documentation.json", kind: .documentationJSON)))
     }
 }
