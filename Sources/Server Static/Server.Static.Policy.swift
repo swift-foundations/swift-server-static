@@ -14,6 +14,7 @@ extension Server.Static {
             switch Self.path(from: request.path) {
             case .failure(let reason):
                 return .rejected(reason)
+
             case .success(let path):
                 return resolve(path: path)
             }
@@ -59,6 +60,7 @@ extension Server.Static {
             switch decode(leadingSlashRemoved) {
             case .failure(let reason):
                 return .failure(reason)
+
             case .success(let decodedPath):
                 return normalized(decodedPath)
             }
