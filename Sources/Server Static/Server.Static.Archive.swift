@@ -1,3 +1,5 @@
+public import Server
+
 extension Server.Static {
     /// The route layout of a static archive.
     public struct Archive: Equatable, Sendable {

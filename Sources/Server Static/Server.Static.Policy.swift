@@ -1,3 +1,5 @@
+public import Server
+
 extension Server.Static {
     /// Resolves static and DocC archive requests without performing I/O.
     public struct Policy: Equatable, Sendable {

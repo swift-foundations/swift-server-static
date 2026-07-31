@@ -5,8 +5,11 @@ import PackageDescription
 let package = Package(
     name: "swift-server-static",
     platforms: [
-        .macOS(.v14),
-        .iOS(.v17)
+        .macOS(.v26),
+        .iOS(.v26),
+        .tvOS(.v26),
+        .watchOS(.v26),
+        .visionOS(.v26),
     ],
     products: [
         .library(
@@ -14,8 +17,16 @@ let package = Package(
             targets: ["Server Static"]
         )
     ],
+    dependencies: [
+        .package(url: "https://github.com/swift-foundations/swift-server.git", branch: "main"),
+    ],
     targets: [
-        .target(name: "Server Static"),
+        .target(
+            name: "Server Static",
+            dependencies: [
+                .product(name: "Server", package: "swift-server"),
+            ]
+        ),
         .testTarget(
             name: "Server Static Tests",
             dependencies: ["Server Static"]

@@ -1,3 +1,5 @@
+public import Server
+
 extension Server.Static {
     /// The complete decision an engine adapter needs to turn into a response.
     public enum Outcome: Equatable, Sendable {

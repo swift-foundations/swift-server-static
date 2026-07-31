@@ -1,3 +1,5 @@
+public import Server
+
 extension Server.Static {
     /// An engine-neutral request path presented to the static policy.
     public struct Request: Equatable, Sendable {

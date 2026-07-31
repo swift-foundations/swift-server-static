@@ -1,3 +1,5 @@
+public import Server
+
 extension Server.Static {
     /// A resource path selected for an engine adapter to read and serve.
     public struct Resource: Equatable, Sendable {
