@@ -8,9 +8,12 @@ extension Server.Static {
         public init(profile: Archive.Profile = .docC) {
             self.archive = profile.archive
         }
+    }
+}
 
+extension Server.Static.Policy {
         /// Resolves a request into a resource, redirect, or typed rejection.
-        public func resolve(_ request: Request) -> Outcome {
+        public func resolve(_ request: Server.Static.Request) -> Server.Static.Outcome {
             switch Self.path(from: request.path) {
             case .failure(let reason):
                 return .rejected(reason)
@@ -20,7 +23,7 @@ extension Server.Static {
             }
         }
 
-        private func resolve(path: String) -> Outcome {
+        private func resolve(path: String) -> Server.Static.Outcome {
             guard !path.isEmpty else {
                 return .resource(.init(path: archive.rootIndex, kind: .index))
             }
@@ -52,7 +55,7 @@ extension Server.Static {
             return .resource(.init(path: path))
         }
 
-        private static func path(from requestPath: String) -> Result<String, Reason> {
+        private static func path(from requestPath: String) -> Result<String, Server.Static.Reason> {
             guard !requestPath.isEmpty else { return .success("") }
 
             let leadingSlashRemoved = requestPath.first == "/" ? String(requestPath.dropFirst()) : requestPath
@@ -66,7 +69,7 @@ extension Server.Static {
             }
         }
 
-        private static func normalized(_ path: String) -> Result<String, Reason> {
+        private static func normalized(_ path: String) -> Result<String, Server.Static.Reason> {
             let trailingSlash = path.last == "/"
             let components = path.split(separator: "/", omittingEmptySubsequences: true)
             var decoded: [String] = []
@@ -83,7 +86,7 @@ extension Server.Static {
             return .success(trailingSlash && !path.isEmpty ? path + "/" : path)
         }
 
-        private static func decode(_ component: String) -> Result<String, Reason> {
+        private static func decode(_ component: String) -> Result<String, Server.Static.Reason> {
             var bytes: [UInt8] = []
             bytes.reserveCapacity(component.utf8.count)
             let source = Array(component.utf8)
@@ -119,7 +122,7 @@ extension Server.Static {
                 if first <= 0x7F {
                     index += 1
                 } else if 0xC2...0xDF ~= first {
-                    guard index + 1 < bytes.count, 0x80...0xBF ~= bytes[index + 1] else { return false }
+                    guard index + 1 < bytes.endIndex, 0x80...0xBF ~= bytes[index + 1] else { return false }
                     index += 2
                 } else if first == 0xE0 {
                     guard index + 2 < bytes.count, 0xA0...0xBF ~= bytes[index + 1], 0x80...0xBF ~= bytes[index + 2] else { return false }
@@ -154,5 +157,4 @@ extension Server.Static {
             default: return nil
             }
         }
-    }
 }
